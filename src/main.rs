@@ -4,7 +4,7 @@ use apple::Apple;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
-use sdl2::rect::Point;
+use sdl2::rect::{Point, Rect};
 use sdl2::render::Canvas;
 use sdl2::video::Window;
 use snake::Snake;
@@ -72,6 +72,9 @@ fn main() {
         // Background color
         canvas.set_draw_color(Color::BLACK);
 
+        // Collision detection
+        detect_collision(&snake.rect(25, 25), &apple.rect(25, 25));
+
         canvas.present();
         thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
     }
@@ -99,5 +102,14 @@ fn draw_grid(canvas: &mut Canvas<Window>) {
         canvas
             .draw_line(Point::new(0, y), Point::new(window_width, y))
             .unwrap();
+    }
+}
+
+fn detect_collision(target: &Rect, opponent: &Rect) {
+    let collided = target.has_intersection(*opponent);
+    if collided {
+        println!("{}", true);
+    } else {
+        println!("{}", false);
     }
 }
