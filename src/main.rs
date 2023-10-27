@@ -60,8 +60,9 @@ fn main() {
 
         // The rest of the game loop goes here
 
-        let rsnake = snake.rect(GRID_CELL as u32);
-        let rapple = apple.rect(GRID_CELL as u32);
+        let size = GRID_CELL as u32;
+        let rsnake = snake.rect(size);
+        let rapple = apple.rect(size);
 
         // Snake color
         canvas.set_draw_color(Color::GREEN);
