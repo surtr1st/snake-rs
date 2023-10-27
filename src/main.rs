@@ -30,7 +30,6 @@ fn main() {
 
     let mut canvas = window.into_canvas().build().unwrap();
 
-    canvas.set_draw_color(Color::BLACK);
     canvas.clear();
     canvas.present();
 
