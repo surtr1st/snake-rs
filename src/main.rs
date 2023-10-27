@@ -34,7 +34,7 @@ fn main() {
     canvas.present();
 
     let mut snake = Snake::new(0, 0);
-    let apple = Apple::spawn();
+    let mut apple = Apple::spawn();
 
     let mut event_pump = sdl_context.event_pump().unwrap();
     'running: loop {
@@ -64,6 +64,11 @@ fn main() {
         let rsnake = snake.rect(size);
         let rapple = apple.rect(size);
 
+        // Collision detection
+        if detect_collision(&rsnake, &rapple) {
+            apple = Apple::spawn();
+        }
+
         // Snake color
         canvas.set_draw_color(Color::GREEN);
         canvas.fill_rect(rsnake).unwrap();
@@ -74,9 +79,6 @@ fn main() {
 
         // Background color
         canvas.set_draw_color(Color::BLACK);
-
-        // Collision detection
-        detect_collision(&rsnake, &rapple);
 
         canvas.present();
         thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
@@ -108,11 +110,11 @@ fn draw_grid(canvas: &mut Canvas<Window>) {
     }
 }
 
-fn detect_collision(target: &Rect, opponent: &Rect) {
+fn detect_collision(target: &Rect, opponent: &Rect) -> bool {
     let collided = target.has_intersection(*opponent);
     if collided {
-        println!("{}", true);
+        true
     } else {
-        println!("{}", false);
+        false
     }
 }
