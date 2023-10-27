@@ -1,4 +1,6 @@
+pub mod apple;
 pub mod snake;
+use apple::Apple;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
@@ -33,6 +35,7 @@ fn main() {
     canvas.present();
 
     let mut snake = Snake::new(0, 0);
+    let apple = Apple::spawn();
 
     let mut event_pump = sdl_context.event_pump().unwrap();
     'running: loop {
@@ -61,6 +64,10 @@ fn main() {
         // Snake color
         canvas.set_draw_color(Color::GREEN);
         canvas.fill_rect(snake.rect(25, 25)).unwrap();
+
+        // Apple color
+        canvas.set_draw_color(Color::RED);
+        canvas.fill_rect(apple.rect(25, 25)).unwrap();
 
         // Background color
         canvas.set_draw_color(Color::BLACK);
