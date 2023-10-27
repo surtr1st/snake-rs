@@ -60,19 +60,22 @@ fn main() {
 
         // The rest of the game loop goes here
 
+        let rsnake = snake.rect(GRID_CELL as u32);
+        let rapple = apple.rect(GRID_CELL as u32);
+
         // Snake color
         canvas.set_draw_color(Color::GREEN);
-        canvas.fill_rect(snake.rect(25, 25)).unwrap();
+        canvas.fill_rect(rsnake).unwrap();
 
         // Apple color
         canvas.set_draw_color(Color::RED);
-        canvas.fill_rect(apple.rect(25, 25)).unwrap();
+        canvas.fill_rect(rapple).unwrap();
 
         // Background color
         canvas.set_draw_color(Color::BLACK);
 
         // Collision detection
-        detect_collision(&snake.rect(25, 25), &apple.rect(25, 25));
+        detect_collision(&rsnake, &rapple);
 
         canvas.present();
         thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));

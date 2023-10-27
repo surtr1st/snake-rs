@@ -12,7 +12,7 @@ impl Apple {
         Apple(x, y)
     }
 
-    pub fn rect(&self, width: u32, height: u32) -> Rect {
-        Rect::new(self.0, self.1, width, height)
+    pub fn rect(&self, size: u32) -> Rect {
+        Rect::new(self.0, self.1, size, size)
     }
 }
