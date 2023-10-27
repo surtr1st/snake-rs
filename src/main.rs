@@ -37,6 +37,7 @@ fn main() {
     let mut event_pump = sdl_context.event_pump().unwrap();
     'running: loop {
         canvas.clear();
+        draw_grid(&mut canvas);
         for event in event_pump.poll_iter() {
             match event {
                 Event::Quit { .. } => break 'running,
@@ -55,11 +56,14 @@ fn main() {
             }
         }
 
-        draw_grid(&mut canvas);
-
         // The rest of the game loop goes here
-        canvas.fill_rect(snake.rect(25, 25)).unwrap();
+
+        // Snake color
         canvas.set_draw_color(Color::GREEN);
+        canvas.fill_rect(snake.rect(25, 25)).unwrap();
+
+        // Background color
+        canvas.set_draw_color(Color::BLACK);
 
         canvas.present();
         thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
