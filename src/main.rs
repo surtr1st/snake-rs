@@ -81,14 +81,14 @@ fn draw_grid(canvas: &mut Canvas<Window>) {
 
     for _ in 0..rows {
         x += GRID_CELL;
-        canvas.set_draw_color(Color::WHITE);
+        canvas.set_draw_color(Color::GREY);
         canvas
             .draw_line(Point::new(x, 0), Point::new(x, window_height))
             .unwrap();
     }
     for _ in 0..cols {
         y += GRID_CELL;
-        canvas.set_draw_color(Color::WHITE);
+        canvas.set_draw_color(Color::GREY);
         canvas
             .draw_line(Point::new(0, y), Point::new(window_width, y))
             .unwrap();
