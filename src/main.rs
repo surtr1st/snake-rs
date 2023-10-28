@@ -23,7 +23,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let sdl_context = sdl2::init()?;
     let video_subsystem = sdl_context.video()?;
     let ttf_context = sdl2::ttf::init()?;
-    sdl2::image::init(InitFlag::PNG)?;
+    let _image_context = sdl2::image::init(InitFlag::PNG)?;
 
     let (width, height) = SCREEN_SIZE;
     let window = video_subsystem
@@ -115,7 +115,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             String::from("textures/apple_25px.png"),
             rapple,
         )?;
-        canvas.fill_rect(rapple)?;
 
         // Background color
         canvas.set_draw_color(Color::BLACK);
@@ -208,8 +207,8 @@ fn render_texture(
     target: Rect,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let texture_path = Path::new(&path);
-    let texture = texture_creator.load_texture(&texture_path)?;
-    canvas.copy(&texture, None, Some(target))?;
+    let texture = texture_creator.load_texture(texture_path)?;
+    canvas.copy(&texture, None, target)?;
 
     Ok(())
 }
