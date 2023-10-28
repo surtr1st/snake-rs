@@ -107,7 +107,7 @@ fn main() {
         canvas.set_draw_color(Color::BLACK);
 
         canvas.present();
-        thread::sleep(Duration::new(0, 1_000_000_000u32 / 15));
+        thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
     }
 }
 
