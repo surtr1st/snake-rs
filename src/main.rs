@@ -35,9 +35,9 @@ fn main() {
     canvas.clear();
     canvas.present();
 
+    let mut score = 0;
     let mut snake = Snake::new();
     let mut apple = Apple::spawn();
-    let mut score = 0;
 
     let mut event_pump = sdl_context.event_pump().unwrap();
     'running: loop {
@@ -53,19 +53,19 @@ fn main() {
                 } => match keycode {
                     Keycode::Q => break 'running,
                     Keycode::W => match snake.direction() {
-                        SnakeDirection::Down => break 'running,
+                        SnakeDirection::Down => {}
                         _ => snake.go_up(),
                     },
                     Keycode::S => match snake.direction() {
-                        SnakeDirection::Up => break 'running,
+                        SnakeDirection::Up => {}
                         _ => snake.go_down(),
                     },
                     Keycode::A => match snake.direction() {
-                        SnakeDirection::Right => break 'running,
+                        SnakeDirection::Right => {}
                         _ => snake.go_left(),
                     },
                     Keycode::D => match snake.direction() {
-                        SnakeDirection::Left => break 'running,
+                        SnakeDirection::Left => {}
                         _ => snake.go_right(),
                     },
                     _ => {}
@@ -80,12 +80,19 @@ fn main() {
         snake.wriggle();
 
         resolve_overflow(&mut snake);
-        let rsnake = snake.body();
+        let rsnake = snake.body().clone();
         let rapple = apple.rect(size);
 
         if detect_collision(&rsnake[0], &rapple) {
             apple = Apple::spawn();
+            snake.grow();
             score += 100;
+        }
+
+        for i in 1..rsnake.len() {
+            if detect_collision(&rsnake[0], &rsnake[i]) {
+                break 'running;
+            }
         }
 
         // Snake color
