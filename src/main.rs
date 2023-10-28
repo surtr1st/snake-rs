@@ -1,6 +1,8 @@
 pub mod apple;
+pub mod constants;
 pub mod snake;
 use apple::Apple;
+use constants::{GRID_HEIGHT, GRID_WIDTH, SCREEN_SIZE, TITLE};
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
@@ -11,11 +13,7 @@ use snake::Snake;
 use std::thread;
 use std::time::Duration;
 
-const TITLE: &str = "Snake";
-const GRID_CELL: i32 = 25;
-const GRID_WIDTH: i32 = 32;
-const GRID_HEIGHT: i32 = 24;
-const SCREEN_SIZE: (u32, u32) = (800, 600);
+use crate::constants::GRID_CELL;
 
 fn main() {
     let sdl_context = sdl2::init().unwrap();
@@ -33,7 +31,7 @@ fn main() {
     canvas.clear();
     canvas.present();
 
-    let mut snake = Snake::new(0, 0);
+    let mut snake = Snake::new();
     let mut apple = Apple::spawn();
 
     let mut event_pump = sdl_context.event_pump().unwrap();
@@ -61,20 +59,19 @@ fn main() {
         // The rest of the game loop goes here
 
         let size = GRID_CELL as u32;
-        let rsnake = snake.rect(size);
-        let rapple = apple.rect(size);
-
         snake.wriggle();
 
-        if detect_collision(&rsnake, &rapple) {
+        resolve_overflow(&mut snake);
+        let rsnake = snake.body();
+        let rapple = apple.rect(size);
+
+        if detect_collision(&rsnake[0], &rapple) {
             apple = Apple::spawn();
         }
 
-        resolve_overflow(&mut snake);
-
         // Snake color
         canvas.set_draw_color(Color::GREEN);
-        canvas.fill_rect(rsnake).unwrap();
+        canvas.fill_rects(&rsnake).unwrap();
 
         // Apple color
         canvas.set_draw_color(Color::RED);
@@ -84,7 +81,7 @@ fn main() {
         canvas.set_draw_color(Color::BLACK);
 
         canvas.present();
-        thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
+        thread::sleep(Duration::new(0, 1_000_000_000u32 / 15));
     }
 }
 
@@ -129,18 +126,18 @@ fn resolve_overflow(target: &mut Snake) {
     let height = size.1 as i32;
 
     if x >= width {
-        target.set_x(0);
+        target.add_coordinate((-25, y));
     }
 
     if x < 0 {
-        target.set_x(width - GRID_CELL);
+        target.add_coordinate((width, y));
     }
 
     if y >= height {
-        target.set_y(0);
+        target.add_coordinate((x, -25));
     }
 
     if y < 0 {
-        target.set_y(height - GRID_CELL);
+        target.add_coordinate((x, height));
     }
 }
