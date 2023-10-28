@@ -8,8 +8,11 @@ use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
 use sdl2::rect::{Point, Rect};
 use sdl2::render::Canvas;
-use sdl2::video::Window;
+use sdl2::render::TextureCreator;
+use sdl2::ttf::FontStyle;
+use sdl2::video::{Window, WindowContext};
 use snake::{Snake, SnakeDirection};
+use std::path::Path;
 use std::thread;
 use std::time::Duration;
 
@@ -27,16 +30,20 @@ fn main() {
         .unwrap();
 
     let mut canvas = window.into_canvas().build().unwrap();
+    let mut texture_creator = canvas.texture_creator();
 
     canvas.clear();
     canvas.present();
 
     let mut snake = Snake::new();
     let mut apple = Apple::spawn();
+    let mut score = 0;
 
     let mut event_pump = sdl_context.event_pump().unwrap();
     'running: loop {
         canvas.clear();
+        let score_indicate = format!("Score: {}", score);
+        draw_text(&mut canvas, &mut texture_creator, score_indicate);
         draw_grid(&mut canvas);
         for event in event_pump.poll_iter() {
             match event {
@@ -78,6 +85,7 @@ fn main() {
 
         if detect_collision(&rsnake[0], &rapple) {
             apple = Apple::spawn();
+            score += 100;
         }
 
         // Snake color
@@ -151,4 +159,23 @@ fn resolve_overflow(target: &mut Snake) {
     if y < 0 {
         target.add_coordinate((x, height));
     }
+}
+
+fn draw_text(
+    canvas: &mut Canvas<Window>,
+    texture_creator: &mut TextureCreator<WindowContext>,
+    content: String,
+) {
+    let ttf_context = sdl2::ttf::init().unwrap();
+    let font_path = Path::new("fonts/Inter-V.ttf");
+    let mut font = ttf_context.load_font(font_path, 128).unwrap();
+    font.set_style(FontStyle::BOLD);
+
+    let surface = font.render(&content).blended(Color::WHITE).unwrap();
+    let texture = texture_creator
+        .create_texture_from_surface(surface)
+        .unwrap();
+    let target = Rect::new((SCREEN_SIZE.0 - 400) as i32, 0, 170, 50);
+
+    canvas.copy(&texture, None, Some(target)).unwrap();
 }
