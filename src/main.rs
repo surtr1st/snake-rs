@@ -64,6 +64,8 @@ fn main() {
         let rsnake = snake.rect(size);
         let rapple = apple.rect(size);
 
+        snake.wriggle();
+
         if detect_collision(&rsnake, &rapple) {
             apple = Apple::spawn();
         }
