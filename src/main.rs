@@ -69,6 +69,8 @@ fn main() {
             apple = Apple::spawn();
         }
 
+        resolve_overflow(&mut snake);
+
         // Snake color
         canvas.set_draw_color(Color::GREEN);
         canvas.fill_rect(rsnake).unwrap();
@@ -116,5 +118,28 @@ fn detect_collision(target: &Rect, opponent: &Rect) -> bool {
         true
     } else {
         false
+    }
+}
+
+fn resolve_overflow(target: &mut Snake) {
+    let (x, y) = target.position();
+    let size = SCREEN_SIZE;
+    let width = size.0 as i32;
+    let height = size.1 as i32;
+
+    if x >= width {
+        target.set_x(0);
+    }
+
+    if x < 0 {
+        target.set_x(width - GRID_CELL);
+    }
+
+    if y >= height {
+        target.set_y(0);
+    }
+
+    if y < 0 {
+        target.set_y(height - GRID_CELL);
     }
 }
