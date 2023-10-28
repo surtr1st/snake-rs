@@ -108,7 +108,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         canvas.fill_rects(&rsnake)?;
 
         // Apple color
-        canvas.set_draw_color(Color::RED);
         render_texture(
             &mut canvas,
             &mut texture_creator,
