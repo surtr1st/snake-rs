@@ -9,7 +9,7 @@ use sdl2::pixels::Color;
 use sdl2::rect::{Point, Rect};
 use sdl2::render::Canvas;
 use sdl2::video::Window;
-use snake::Snake;
+use snake::{Snake, SnakeDirection};
 use std::thread;
 use std::time::Duration;
 
@@ -40,16 +40,27 @@ fn main() {
         draw_grid(&mut canvas);
         for event in event_pump.poll_iter() {
             match event {
-                Event::Quit { .. } => break 'running,
                 Event::KeyDown {
                     keycode: Some(keycode),
                     ..
                 } => match keycode {
                     Keycode::Q => break 'running,
-                    Keycode::W => snake.go_up(),
-                    Keycode::S => snake.go_down(),
-                    Keycode::A => snake.go_left(),
-                    Keycode::D => snake.go_right(),
+                    Keycode::W => match snake.direction() {
+                        SnakeDirection::Down => break 'running,
+                        _ => snake.go_up(),
+                    },
+                    Keycode::S => match snake.direction() {
+                        SnakeDirection::Up => break 'running,
+                        _ => snake.go_down(),
+                    },
+                    Keycode::A => match snake.direction() {
+                        SnakeDirection::Right => break 'running,
+                        _ => snake.go_left(),
+                    },
+                    Keycode::D => match snake.direction() {
+                        SnakeDirection::Left => break 'running,
+                        _ => snake.go_right(),
+                    },
                     _ => {}
                 },
                 _ => {}
