@@ -1,5 +1,7 @@
 use sdl2::rect::Rect;
 
+use crate::constants::GRID_CELL;
+
 enum SnakeDirection {
     Up,
     Down,
@@ -8,34 +10,44 @@ enum SnakeDirection {
 }
 
 pub struct Snake {
-    x: i32,
-    y: i32,
+    coordinates: Vec<(i32, i32)>,
+    body: Vec<Rect>,
     direction: SnakeDirection,
 }
 
 impl Snake {
-    pub fn new(x: i32, y: i32) -> Self {
+    pub fn new() -> Self {
+        let parts = 3;
+        let mut coordinates = vec![];
+        let mut body = vec![];
+        for i in 0..parts {
+            coordinates.insert(i, (0, 0));
+        }
+
+        let mut index = 0;
+        let size = GRID_CELL as u32;
+        for (x, y) in &coordinates {
+            body.insert(index, Rect::new(*x, *y, size, size));
+            index += 1;
+        }
+
         Snake {
-            x,
-            y,
+            coordinates,
+            body,
             direction: SnakeDirection::Right,
         }
     }
 
-    pub fn rect(&self, size: u32) -> Rect {
-        Rect::new(self.x, self.y, size, size)
+    pub fn body(&self) -> &Vec<Rect> {
+        &self.body
+    }
+
+    pub fn add_coordinate(&mut self, coordinate: (i32, i32)) {
+        self.coordinates.insert(0, coordinate);
     }
 
     pub fn position(&self) -> (i32, i32) {
-        (self.x, self.y)
-    }
-
-    pub fn set_x(&mut self, x: i32) {
-        self.x = x;
-    }
-
-    pub fn set_y(&mut self, y: i32) {
-        self.y = y;
+        self.coordinates[0]
     }
 
     pub fn go_left(&mut self) {
@@ -55,11 +67,25 @@ impl Snake {
     }
 
     pub fn wriggle(&mut self) {
+        let (mut x, mut y) = self.coordinates[0];
         match self.direction {
-            SnakeDirection::Up => self.y -= 25,
-            SnakeDirection::Down => self.y += 25,
-            SnakeDirection::Left => self.x -= 25,
-            SnakeDirection::Right => self.x += 25,
+            SnakeDirection::Up => y -= GRID_CELL,
+            SnakeDirection::Down => y += GRID_CELL,
+            SnakeDirection::Left => x -= GRID_CELL,
+            SnakeDirection::Right => x += GRID_CELL,
         }
+
+        self.coordinates.insert(0, (x, y));
+
+        let size = GRID_CELL as u32;
+        let body_part = Rect::new(x, y, size, size);
+
+        self.body.insert(0, body_part);
+
+        // Delete the last element to prevent old drawing
+        let coordinate_length = self.coordinates.len();
+        self.coordinates.remove(coordinate_length - 1);
+        let body_length = self.body.len();
+        self.body.remove(body_length - 1);
     }
 }
