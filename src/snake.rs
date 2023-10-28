@@ -2,7 +2,8 @@ use sdl2::rect::Rect;
 
 use crate::constants::GRID_CELL;
 
-enum SnakeDirection {
+#[derive(PartialEq, Eq, Clone)]
+pub enum SnakeDirection {
     Up,
     Down,
     Right,
@@ -50,6 +51,10 @@ impl Snake {
         self.coordinates[0]
     }
 
+    pub fn direction(&self) -> SnakeDirection {
+        self.direction.clone()
+    }
+
     pub fn go_left(&mut self) {
         self.direction = SnakeDirection::Left;
     }
@@ -68,6 +73,7 @@ impl Snake {
 
     pub fn wriggle(&mut self) {
         let (mut x, mut y) = self.coordinates[0];
+
         match self.direction {
             SnakeDirection::Up => y -= GRID_CELL,
             SnakeDirection::Down => y += GRID_CELL,
