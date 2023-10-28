@@ -7,8 +7,8 @@ pub struct Apple(i32, i32);
 impl Apple {
     pub fn spawn() -> Self {
         let mut rng = rand::thread_rng();
-        let x = rng.gen_range(0..=25) * 25;
-        let y = rng.gen_range(0..=25) * 25;
+        let x = rng.gen_range(0..=24) * 25;
+        let y = rng.gen_range(0..=24) * 25;
         Apple(x, y)
     }
 
