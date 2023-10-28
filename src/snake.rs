@@ -10,6 +10,7 @@ pub enum SnakeDirection {
     Left,
 }
 
+#[derive(Clone)]
 pub struct Snake {
     coordinates: Vec<(i32, i32)>,
     body: Vec<Rect>,
@@ -45,6 +46,13 @@ impl Snake {
 
     pub fn add_coordinate(&mut self, coordinate: (i32, i32)) {
         self.coordinates.insert(0, coordinate);
+    }
+
+    pub fn grow(&mut self) {
+        let last_index = self.body.len() - 1;
+        let (x, y) = self.position();
+        let size = GRID_CELL as u32;
+        self.body.insert(last_index, Rect::new(x, y, size, size));
     }
 
     pub fn position(&self) -> (i32, i32) {
